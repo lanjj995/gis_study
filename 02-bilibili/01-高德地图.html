@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高德地图API</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    #map-container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    #map-container__control {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+    }
+  </style>
+  <script type="text/javascript">
+    window._AMapSecurityConfig = {
+      securityJsCode: "15d2b3eb79c5ea87a8098a5a52d6f0e8",
+    };
+  </script>
+  <script src="https://webapi.amap.com/loader.js"></script>
+  <script type="text/javascript">
+    AMapLoader.load({
+      key: "dba6d4f0dc4dd4965f8a8a858f2dc9fe", //申请好的Web端开发者key，调用 load 时必填
+      version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
+    })
+      .then((AMap) => {
+        init(AMap)
+      })
+      .catch((e) => {
+        console.error(e); //加载错误提示
+      });
+    
+    function init(AMap) {
+      const layer = new AMap.createDefaultLayer({
+        zooms: [3, 20], //可见级别
+        visible: true, //是否可见
+        opacity: 1, //透明度
+        zIndex: 0, //叠加层级
+      });
+      const map = new AMap.Map("map-container", {
+        viewMode: '2D', //默认使用 2D 模式
+        zoom: 11, //地图级别
+        center: [116.397428, 39.90923], //地图中心点
+        layers: [layer]
+      });
+
+      // 创建实时交通图层
+      let trafficLayer = new AMap.TileLayer.Traffic({
+        autoRefresh: true, //是否自动刷新，默认为false
+        interval: 180, //刷新间隔，默认180s
+        visible: false
+      })
+      map.add(trafficLayer)
+
+      AMap.plugin([
+        'AMap.ToolBar',
+        'AMap.Scale',
+        'AMap.ControlBar',
+        'AMap.Geolocation',
+        'AMap.HawkEye',
+        'AMap.MapType'
+      ], () => {
+        // toolbar 放大缩小控件
+        map.addControl(new AMap.ToolBar({
+          position:  { right: '20px', bottom: '200px' } 
+        }))
+        // scale 比例尺控件
+        map.addControl(new AMap.Scale())
+        // controlBar 控制按钮
+        map.addControl(new AMap.ControlBar())
+        // geolocation 定位控件
+        map.addControl(new AMap.Geolocation())
+        // hawkEye 鹰眼控件
+        map.addControl(new AMap.HawkEye())
+        // mapType 地图类型控件
+        map.addControl(new AMap.MapType())
+      })
+
+      function onShowTrafficLayer() {
+        trafficLayer.show()
+      }
+
+      function onHideTrafficLayer() {
+        trafficLayer.hide()
+      }
+      document.getElementById('addTrafficBtn').addEventListener('click', onShowTrafficLayer)
+      document.getElementById('removeTrafficBtn').addEventListener('click', onHideTrafficLayer)
+    }
+
+    
+    </script>
+</head>
+<body>
+  <div id="map-container"></div>
+
+  <div id="map-container__control">
+    <ul>
+      <li>
+        <button id="addTrafficBtn">显示交通图层</button>
+      </li>
+      <li>
+        <button id="removeTrafficBtn">隐藏交通图层</button>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
