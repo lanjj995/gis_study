@@ -17,10 +17,54 @@
 
     #map-container__control {
       position: absolute;
-      bottom: 20px;
+      bottom: 280px;
       right: 20px;
       background-color: #fff;
-      border-radius: 10px;
+      border-radius: 3px;
+      box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
+      padding: 10px;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button {
+      background-color: #fff;
+      padding: 4px 8px;
+      border-radius: 50vh;
+      border: 1px solid #25A5F7;
+      color: #25A5F7;
+      cursor: pointer;
+      margin: 4px 0;
+      transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #25A5F7;
+      color: #fff;
+    }
+
+    .custom-content-marker {
+      position: relative;
+    }
+
+    .custom-content-marker .close-btn {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+    }
+
+    #search-panel {
+      position: absolute;
+      bottom: 350px;
+      left: 20px;
+    }
+
+    #driving-panel {
+      position: absolute;
+      bottom: 50px;
+      left: 20px;
     }
   </style>
   <script type="text/javascript">
@@ -42,12 +86,14 @@
       });
     
     function init(AMap) {
+
       const layer = new AMap.createDefaultLayer({
         zooms: [3, 20], //可见级别
         visible: true, //是否可见
         opacity: 1, //透明度
         zIndex: 0, //叠加层级
       });
+      
       const map = new AMap.Map("map-container", {
         viewMode: '2D', //默认使用 2D 模式
         zoom: 11, //地图级别
@@ -55,14 +101,27 @@
         layers: [layer]
       });
 
-      // 创建实时交通图层
-      let trafficLayer = new AMap.TileLayer.Traffic({
-        autoRefresh: true, //是否自动刷新，默认为false
-        interval: 180, //刷新间隔，默认180s
-        visible: false
-      })
-      map.add(trafficLayer)
+      // 初始化插件
+      initPlugin(AMap, map)
 
+      // 实时交通图层
+      initTrafficLayer(AMap, map)
+      
+      // 初始化点标记
+      initMarker(AMap, map)
+
+      // 多边形
+      initPolygon(AMap, map)
+
+      // 搜索
+      initPlaceSearch(AMap, map)
+
+      // 导航
+      initDriving(AMap, map)
+    }
+
+    // 初始化插件
+    function initPlugin(AMap, map) {
       AMap.plugin([
         'AMap.ToolBar',
         'AMap.Scale',
@@ -86,6 +145,17 @@
         // mapType 地图类型控件
         map.addControl(new AMap.MapType())
       })
+    }
+
+    // 初始化交通图层
+    function initTrafficLayer(AMap, map) {
+      let trafficLayer = new AMap.TileLayer.Traffic({
+        autoRefresh: true, //是否自动刷新，默认为false
+        interval: 180, //刷新间隔，默认180s
+        visible: false
+      })
+      
+      map.add(trafficLayer)
 
       function onShowTrafficLayer() {
         trafficLayer.show()
@@ -94,10 +164,117 @@
       function onHideTrafficLayer() {
         trafficLayer.hide()
       }
-      document.getElementById('addTrafficBtn').addEventListener('click', onShowTrafficLayer)
-      document.getElementById('removeTrafficBtn').addEventListener('click', onHideTrafficLayer)
+      document.getElementById('showTrafficBtn').addEventListener('click', onShowTrafficLayer)
+      document.getElementById('hideTrafficBtn').addEventListener('click', onHideTrafficLayer)
     }
 
+    // 初始化点标记
+    function initMarker(AMap, map) {
+      const position = new AMap.LngLat(116.397428, 39.90923)
+      const marker = new AMap.Marker({
+        position,
+        content: `<div class="custom-content-marker"><img src="//a.amap.com/jsapi_demos/static/demo-center/icons/dir-via-marker.png"><div class="close-btn">X</div>`,
+        offset: new AMap.Pixel(-13, -30)
+      })
+
+      map.add(marker)
+
+      function closeMarker() {
+        map.remove(marker)
+      }
+
+      document.querySelector('.close-btn').addEventListener('click', closeMarker)
+    }
+
+    // 初始化多边形
+    function initPolygon(AMap, map) {
+      const pathArr = [
+        [
+          [
+            [121.7789, 31.3102],
+            [121.7279, 31.3548],
+            [121.5723, 31.4361],
+            [121.5093, 31.4898],
+            [121.5624, 31.4864],
+            [121.5856, 31.4547],
+            [121.7694, 31.3907],
+            [121.796, 31.3456],
+            [121.7789, 31.3102],
+          ],
+        ],
+      ];
+      
+      const polygon = new AMap.Polygon({
+        path: pathArr, //多边形路径
+        fillColor: "#ccebc5", //多边形填充颜色
+        strokeOpacity: 1, //线条透明度
+        fillOpacity: 0.5, //填充透明度
+        strokeColor: "#2b8cbe", //线条颜色
+        strokeWeight: 1, //线条宽度
+        strokeStyle: "dashed", //线样式
+        strokeDasharray: [5, 5], //轮廓的虚线和间隙的样式
+      });
+
+      polygon.on('mouseover', () => {
+        polygon.setOptions({
+          fillOpacity: 0.8,
+          fillColor: '#7bccc4'
+        })
+      })
+
+      polygon.on('mouseout', () => {
+        polygon.setOptions({
+          fillOpacity: 0.5,
+          fillColor: '#ccebc5'
+        })
+      })
+
+      map.add(polygon)
+    }
+
+    // 初始化搜索
+    function initPlaceSearch(AMap, map) {
+      AMap.plugin('AMap.PlaceSearch', function() {
+        const placeSearch = new AMap.PlaceSearch({
+          pageSize: 5, //单页显示结果条数
+          pageIndex: 1, //页码
+          city: "010", //兴趣点城市
+          citylimit: true, //是否强制限制在设置的城市内搜索
+          map: map, //展现结果的地图实例
+          panel: "search-panel", //参数值为你页面定义容器的 id 值<div id="my-panel"></div>，结果列表将在此容器中进行展示。
+          autoFitView: true, //是否自动调整地图视野使绘制的 Marker 点都处于视口的可见范围
+        })
+        placeSearch.search('北京大学')
+      })
+    }
+
+    // 导航
+    function initDriving(AMap, map) {
+      const points = [
+        { keyword: '北京市地震局（公交站）',city:'北京' }, //起始点坐标
+        { keyword: '亦庄文化园（地铁站）',city:'北京' } //终点坐标
+      ]
+      const startLngLat = [116.379028, 39.865042] //起始点坐标
+      const endLngLat = [116.427281, 39.903719] //终点坐标      
+
+      
+      AMap.plugin(["AMap.Driving"], function () {
+        const driving = new AMap.Driving({
+          map: map,
+          panel: "driving-panel",
+        });
+        //获取起终点规划线路
+        driving.search(points, function (status, result) {
+          if (status === "complete") {
+            //status：complete 表示查询成功，no_data 为查询无结果，error 代表查询错误
+            //查询成功时，result 即为对应的驾车导航信息
+            console.log(result);
+          } else {
+            console.log("获取驾车数据失败：" + result);
+          }
+        });
+      })
+    }
     
     </script>
 </head>
@@ -107,12 +284,14 @@
   <div id="map-container__control">
     <ul>
       <li>
-        <button id="addTrafficBtn">显示交通图层</button>
+        <button id="showTrafficBtn">显示交通图层</button>
       </li>
       <li>
-        <button id="removeTrafficBtn">隐藏交通图层</button>
+        <button id="hideTrafficBtn">隐藏交通图层</button>
       </li>
     </ul>
   </div>
+  <div id="search-panel"></div>
+  <div id="driving-panel"></div>
 </body>
 </html>
