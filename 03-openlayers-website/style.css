@@ -1,0 +1,34 @@
+@import "node_modules/ol/ol.css";
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+.map, #map {
+  width: 100%;
+  height: 100%;
+}
+
+.map .ol-full-screen {
+  top: 2.5em;
+}
+
+.map .ol-mouse-position {
+  top: inherit;
+  right: inherit;
+  bottom: .5em;
+  left: .5em;
+}
+
+.map .ol-overviewmap {
+  left: inherit;
+  right: .5em;
+  bottom: 2.5em;
+}
+
+.map .ol-custom-control {
+  position: absolute;
+  bottom: 2.5em;
+  left: .5em;
+}
