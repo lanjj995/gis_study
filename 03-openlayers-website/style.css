@@ -32,3 +32,13 @@ html, body {
   bottom: 2.5em;
   left: .5em;
 }
+
+.layers-checkbox-wrap {
+  position: absolute;
+  right: .5em;
+  bottom: calc(150px + 2.5em);
+  background-color: #fff;
+  box-sizing: border-box;
+  padding: .5em;
+  box-shadow: 0 4px 1px rgba(0, 0, 0, .2);
+}

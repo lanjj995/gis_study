@@ -2,9 +2,9 @@ import './style.css';
 import 'ol/ol.css'
 import {Map, View} from 'ol';
 import TileLayer from 'ol/layer/Tile';
-import OSM from 'ol/source/OSM';
+import XYZ from 'ol/source/XYZ';
 import * as Control from 'ol/control'
-
+const TIANDITU_KEY = 'b58e95b35830cd576df218d62abedbdd'
 
 class CustomControl extends Control.Control {
   constructor(options = {}) {
@@ -35,6 +35,27 @@ class CustomControl extends Control.Control {
   
 }
 
+const layers = [
+  new TileLayer({
+    name: '天地图影像底图',
+    source: new XYZ({
+      url: 'http://t{0-7}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + TIANDITU_KEY
+    })
+  }),
+  new TileLayer({
+    name: '天地图矢量注记',
+    source: new XYZ({
+      url: 'http://t{0-7}.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + TIANDITU_KEY
+    })
+  }),
+  // new TileLayer({
+  //   name: '天地图矢量注记',
+  //   source: new XYZ({
+  //     url: 'http://t0.tianditu.gov.cn/cva_w/wmts?tk=' + TIANDITU_KEY
+  //   })
+  // }),
+]
+
 const map = new Map({
   target: 'map',
   controls: [
@@ -43,11 +64,7 @@ const map = new Map({
     new Control.OverviewMap({
       collapsed: false,
       rotateWithView: false,
-      layers: [
-        new TileLayer({
-          source: new OSM()
-        })
-      ]
+      // layers
     }), // 鹰眼
     // new Control.MousePosition(),
     new Control.Attribution(),
@@ -58,14 +75,34 @@ const map = new Map({
       autoHide: false
     })
   ],
-  layers: [
-    new TileLayer({
-      source: new OSM()
-    })
-  ],
+  layers,
   view: new View({
-    center: [0, 0],
+    center: [116.397428, 39.90923],
     zoom: 2,
-    rotation: 1
   })
 });
+
+loadLayers(map)
+
+function loadLayers(map) {
+  const layers = map.getLayers().getArray()
+  const layersCheckboxWrap = document.createElement('ul')
+  layersCheckboxWrap.className = 'layers-checkbox-wrap'
+  layers.forEach(layer => {
+    const layerCheckbox = document.createElement('input')
+    layerCheckbox.type = 'checkbox'
+    layerCheckbox.id = layer.get('name')
+    layerCheckbox.checked = layer.getVisible()
+    layerCheckbox.addEventListener('change', function(e) {
+      layer.setVisible(e.target.checked)
+    })
+    const layerCheckboxLabel = document.createElement('label')
+    layerCheckboxLabel.htmlFor = layer.get('name')
+    layerCheckboxLabel.innerHTML = layer.get('name')
+    const li = document.createElement('li')
+    li.appendChild(layerCheckbox)
+    li.appendChild(layerCheckboxLabel)
+    layersCheckboxWrap.appendChild(li)
+  })
+  document.querySelector('.map').appendChild(layersCheckboxWrap)
+}
