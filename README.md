@@ -41,3 +41,24 @@ WMTS(Web Map Tile Service) 是地理空间网格服务标准的一种，用于�
 - Layer 与 Feature: 对于矢量图层（VectorLayer），Layer 包含多个 Feature 对象。每个 Feature 有一个 Geometry，定义了它在地图上的形状。
 - Interaction 与 Map: Interaction 模块定义了用户与地图交互的方式。交互实例被添加到 Map 对象中，从而响应用户事件并更新 View 或 Layer 的状态。
 - Control 与 Map: Control 模块提供了用户界面元素，如按钮和滑块，允许用户以特定方式与地图交互。控件被添加到 Map 对象中，并可以访问和修改 Map 和 View 的状态。
+
+# 访问天地图的服务
+
+在访问天地图的服务时，可以根据图层的后缀来判断使用的坐标系标准：
+
+以 _w 结尾的图层：使用 EPSG:3857（Web 墨卡托投影），例如 vec_w、img_w 等。
+以 _c 结尾的图层：使用 EPSG:4326（WGS84 地理坐标系），例如 vec_c、img_c 等。
+
+1. EPSG:4326 (WGS84 坐标系)
+
+- vec_c: 矢量地图（WGS84）
+- cva_c: 矢量注记（WGS84）
+- img_c: 影像地图（WGS84）
+- cia_c: 影像注记（WGS84）
+
+2. EPSG:3857 (Web Mercator 坐标系)
+
+- vec_w: 矢量地图（Web 墨卡托）
+- cva_w: 矢量注记（Web 墨卡托）
+- img_w: 影像地图（Web 墨卡托）
+- cia_w: 影像注记（Web 墨卡托）

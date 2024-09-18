@@ -4,6 +4,7 @@ import {Map, View} from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import * as Control from 'ol/control'
+import { transform } from 'ol/proj';
 const TIANDITU_KEY = 'b58e95b35830cd576df218d62abedbdd'
 
 class CustomControl extends Control.Control {
@@ -35,25 +36,38 @@ class CustomControl extends Control.Control {
   
 }
 
-const layers = [
+const layers_4326 = [
   new TileLayer({
     name: '天地图影像底图',
     source: new XYZ({
+      projection: 'EPSG:4326',
+      url: 'http://t{0-7}.tianditu.com/DataServer?T=vec_c&x={x}&y={y}&l={z}&tk=' + TIANDITU_KEY
+    })
+  }),
+  new TileLayer({
+    name: '天地图矢量注记',
+    source: new XYZ({
+      projection: 'EPSG:4326',
+      url: 'http://t{0-7}.tianditu.com/DataServer?T=cva_c&x={x}&y={y}&l={z}&tk=' + TIANDITU_KEY
+    })
+  }),
+]
+
+const layers_3857 = [
+  new TileLayer({
+    name: '天地图影像底图',
+    source: new XYZ({
+      projection: 'EPSG:3857',
       url: 'http://t{0-7}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + TIANDITU_KEY
     })
   }),
   new TileLayer({
     name: '天地图矢量注记',
     source: new XYZ({
+      projection: 'EPSG:3857',
       url: 'http://t{0-7}.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + TIANDITU_KEY
     })
   }),
-  // new TileLayer({
-  //   name: '天地图矢量注记',
-  //   source: new XYZ({
-  //     url: 'http://t0.tianditu.gov.cn/cva_w/wmts?tk=' + TIANDITU_KEY
-  //   })
-  // }),
 ]
 
 const map = new Map({
@@ -75,10 +89,15 @@ const map = new Map({
       autoHide: false
     })
   ],
-  layers,
+  layers: layers_3857,
   view: new View({
-    center: [116.397428, 39.90923],
-    zoom: 2,
+    // projection: 'EPSG:4326',
+    // center: [116.397428, 39.90923],
+    projection: 'EPSG:3857',
+    center: transform([116.397428, 39.90923], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 8,
+    minZoom: 8,
+    maxZoom: 18
   })
 });
 
