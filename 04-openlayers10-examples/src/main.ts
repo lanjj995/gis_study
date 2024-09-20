@@ -1,5 +1,6 @@
 import './assets/base.css'
 import 'element-plus/dist/index.css'
+import 'ol/ol.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'

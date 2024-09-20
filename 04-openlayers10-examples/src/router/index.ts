@@ -25,6 +25,30 @@ export const routes = [
     meta: {
       title: '加载不同地图数据'
     }
+  },
+  {
+    path: '/measure',
+    name: 'measure',
+    component: () => import('../views/measure/index.vue'),
+    meta: {
+      title: '绘图工具'
+    }
+  },
+  {
+    path: '/mouse',
+    name: 'mouse',
+    component: () => import('../views/mouse/index.vue'),
+    meta: {
+      title: '点击事件'
+    }
+  },
+  {
+    path: '/yuhang',
+    name: 'yuhang',
+    component: () => import('../views/yuhang/index.vue'),
+    meta: {
+      title: '余杭'
+    }
   }
 ]
 
