@@ -20,6 +20,15 @@ export default {
   },
   methods: {
     initMap() {
+      const q = 0.0005
+      const qq = -0.0035
+
+      const tt = [
+        119.68108999999999753 + qq,
+        30.15869700000000009 + q,
+        120.15048400000000584 + qq,
+        30.56651600000000002 + q
+      ]
       const layers = [
         // arcgis 地图
         new TileLayer({
@@ -54,11 +63,11 @@ export default {
         // }),
         // 余杭区
         new ImageLayer({
-          extent: transformExtent([119.671445556641, 30.1572184500983, 120.160484375, 30.5694580078125], 'EPSG:4326', 'EPSG:3857'),
+          extent: transformExtent(tt, 'EPSG:4326', 'EPSG:3857'),
           source: new ImageStatic({
-            url: '/Assets/personalized/yhtd.png',
+            url: '/Assets/personalized/yhzq.png',
             projection: 'EPSG:4326',
-            imageExtent: [119.671445556641, 30.1572184500983, 120.160484375, 30.5694580078125]
+            imageExtent: tt
           }),
           opacity: 0.5
         })
