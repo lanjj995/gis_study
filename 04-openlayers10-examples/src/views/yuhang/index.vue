@@ -29,6 +29,8 @@ export default {
         120.15048400000000584 + qq,
         30.56651600000000002 + q
       ]
+
+      console.log(`tt`, JSON.stringify(tt))
       const layers = [
         // arcgis 地图
         new TileLayer({
@@ -63,11 +65,11 @@ export default {
         // }),
         // 余杭区
         new ImageLayer({
-          extent: transformExtent(tt, 'EPSG:4326', 'EPSG:3857'),
+          extent: transformExtent([119.67759,30.159197,120.146984,30.567016], 'EPSG:4326', 'EPSG:3857'),
           source: new ImageStatic({
             url: '/Assets/personalized/yhzq.png',
             projection: 'EPSG:4326',
-            imageExtent: tt
+            imageExtent: [119.67759,30.159197,120.146984,30.567016]
           }),
           opacity: 0.5
         })
