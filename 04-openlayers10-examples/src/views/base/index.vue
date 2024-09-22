@@ -9,6 +9,13 @@ import { ScaleLine, Zoom } from 'ol/control'
 import HomeControl from './HomeControl.js'
 import MapEventType from 'ol/MapEventType.js'
 import { containsExtent } from 'ol/extent'
+import VectorLayer from 'ol/layer/Vector.js'
+import VectorSource from 'ol/source/Vector.js'
+import Draw from 'ol/interaction/Draw'
+const TIAN_DI_TU_KEY = 'b58e95b35830cd576df218d62abedbdd'
+
+window.transformExtent = transformExtent
+window.transform = transform
 
 defineOptions({
   name: 'BaseIndex'
@@ -29,31 +36,48 @@ const createControls = () => {
   ]
 }
 
-const createExtent = () => transformExtent(
-  [108.4, 34.699999000000005, 108.50000100000001, 34.800000000000004],
-  'EPSG:4326',
-  'EPSG:3857'
-)
+const createExtent = () =>
+  transformExtent(
+    // [108.4, 34.699999000000005, 108.50000100000001, 34.800000000000004],
+    [108.3699199635583, 34.69338735895845, 108.5295420876878, 34.82026155846857],
+    'EPSG:4326',
+    'EPSG:3857'
+  )
 
 // 创建view
 const createView = () => {
   return new View({
-    center: transform([116.397428, 39.90923], 'EPSG:4326', 'EPSG:3857'),
-    zoom: 4,
-    minZoom: 2,
-    maxZoom: 18,
+    center: transform([108.44973102562304, 34.75684882738713], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 12.53,
+    minZoom: 12.53,
+    maxZoom: 18
   })
 }
 
 // 创建图层
 const layers = {
-  arcgis: new TileLayer({
+  arcgais: new TileLayer({
     source: new XYZ({
       url: 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
     })
   }),
+  // a: new TileLayer({
+  //   source: new XYZ({
+  //     url: `http://t{0-7}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=${TIAN_DI_TU_KEY}`
+  //   }),
+  // }),
+  // 天地图矢量标注
+  b: new TileLayer({
+    source: new XYZ({
+      url: `http://t{0-7}.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=${TIAN_DI_TU_KEY}`
+    }),
+  }),
   mywms: new TileLayer({
-    extent: createExtent(),
+    extent: transformExtent(
+      [108.4, 34.699999000000005, 108.50000100000001, 34.800000000000004],
+      'EPSG:4326',
+      'EPSG:3857'
+    ),
     source: new TileWMS({
       projection: 'EPSG:4326',
       url: 'http://localhost:8080/geoserver/mywork/wms',
@@ -66,6 +90,9 @@ const layers = {
       serverType: 'geoserver'
     }),
     opacity: 0.4
+  }),
+  drawLayer: new VectorLayer({
+    source: new VectorSource(),
   })
 }
 
@@ -103,13 +130,16 @@ const limitView = (map) => {
 }
 
 const mapEleRef = useTemplateRef('mapEleRef')
+let map 
 const initMap = () => {
-  const map = new Map({
+  map = new Map({
     target: mapEleRef.value,
     controls: createControls(),
     layers: Object.values(layers),
     view: createView()
   })
+
+  window.map = map
 
   listenSingleClick(map)
   // 限制view
@@ -117,12 +147,40 @@ const initMap = () => {
 }
 
 onMounted(initMap)
+
+const drawLabels = [
+  { value: 'Point', label: '点' },
+  { value: 'LineString', label: '线' },
+  { value: 'Polygon', label: '面' },
+  { value: 'Circle', label: '圆' },
+]
+
+let lastDraw
+const handleDraw = (item) => {
+  map.removeInteraction(lastDraw)
+  const source = layers['drawLayer'].getSource()
+  lastDraw = new Draw({
+    source,
+    type: item.value
+  })
+  map.addInteraction(lastDraw)
+}
+
+const handleClear = () => {
+  const source = layers['drawLayer'].getSource()
+  source.clear()
+}
+
 </script>
 
 <template>
   <div class="page">
     <div ref="mapEleRef" class="map"></div>
     <div ref="toolBarRef" class="tool-bar"></div>
+    <div ref="labelToolbarRef" class="label-tool-bar">
+      <button v-for="item in drawLabels" :key="item.value" @click="handleDraw(item)">{{ item.label }}</button>
+      <button @click="handleClear">清除</button>
+    </div>
   </div>
 </template>
 
