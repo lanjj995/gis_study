@@ -3,11 +3,12 @@ import { Map, View } from 'ol'
 import TileLayer from 'ol/layer/Tile'
 import XYZ from 'ol/source/XYZ'
 import { transform, transformExtent } from 'ol/proj'
-import { onMounted, useTemplateRef } from 'vue'
+import { onMounted, reactive, useTemplateRef } from 'vue'
 import { TileWMS } from 'ol/source'
 import { ScaleLine, Zoom } from 'ol/control'
 import HomeControl from './HomeControl.js'
 import MapEventType from 'ol/MapEventType.js'
+import MapBrowserEventType from 'ol/MapBrowserEventType'
 import { containsExtent } from 'ol/extent'
 import VectorLayer from 'ol/layer/Vector.js'
 import VectorSource from 'ol/source/Vector.js'
@@ -156,7 +157,28 @@ const drawLabels = [
 ]
 
 let lastDraw
+const initialMousePosition = () => ({
+  left: '0px',
+  top: '0px',
+  text: '',
+  display: 'none'
+})
+const mousePosition = reactive(initialMousePosition())
+
+const onMouseMovePoint = (event) => {
+  console.log(`event---`, event)
+  mousePosition.left = event.pixel[0] + 10 + 'px'
+  mousePosition.top = event.pixel[1] + 10 + 'px'
+  const coordinate = transform(event.coordinate, 'EPSG:3857', 'EPSG:4326')
+  mousePosition.text = `经度：${coordinate[0]}，纬度：${coordinate[1]}`
+  mousePosition.display = 'block'
+}
 const handleDraw = (item) => {
+  if (item.value === 'Point') {
+    map.on(MapBrowserEventType.POINTERMOVE, onMouseMovePoint)
+  } else {
+    map.un(MapBrowserEventType.POINTERMOVE, onMouseMovePoint)
+  }
   map.removeInteraction(lastDraw)
   const source = layers['drawLayer'].getSource()
   lastDraw = new Draw({
@@ -164,6 +186,13 @@ const handleDraw = (item) => {
     type: item.value
   })
   map.addInteraction(lastDraw)
+  if (item.value === 'Point') {
+    lastDraw.on('drawend', () => {
+      map.removeInteraction(lastDraw)
+      map.un(MapBrowserEventType.POINTERMOVE, onMouseMovePoint)
+      Object.assign(mousePosition, initialMousePosition())
+    })
+  }
 }
 
 const handleClear = () => {
@@ -180,6 +209,11 @@ const handleClear = () => {
     <div ref="labelToolbarRef" class="label-tool-bar">
       <button v-for="item in drawLabels" :key="item.value" @click="handleDraw(item)">{{ item.label }}</button>
       <button @click="handleClear">清除</button>
+    </div>
+    <div
+      class="mouse-position" 
+      :style="{ position: 'absolute', left: mousePosition.left, top: mousePosition.top, display: mousePosition.display }">
+      {{ mousePosition.text }}
     </div>
   </div>
 </template>
