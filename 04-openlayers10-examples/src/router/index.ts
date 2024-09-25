@@ -49,6 +49,14 @@ export const routes = [
     meta: {
       title: '余杭'
     }
+  },
+  {
+    path: '/wmts',
+    name: 'wmts',
+    component: () => import('../views/wmts/index.vue'),
+    meta: {
+      title: 'wmts'
+    }
   }
 ]
 

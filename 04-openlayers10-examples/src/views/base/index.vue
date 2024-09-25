@@ -71,7 +71,7 @@ const layers = {
   b: new TileLayer({
     source: new XYZ({
       url: `http://t{0-7}.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=${TIAN_DI_TU_KEY}`
-    }),
+    })
   }),
   mywms: new TileLayer({
     extent: transformExtent(
@@ -93,7 +93,7 @@ const layers = {
     opacity: 0.4
   }),
   drawLayer: new VectorLayer({
-    source: new VectorSource(),
+    source: new VectorSource()
   })
 }
 
@@ -131,7 +131,7 @@ const limitView = (map) => {
 }
 
 const mapEleRef = useTemplateRef('mapEleRef')
-let map 
+let map
 const initMap = () => {
   map = new Map({
     target: mapEleRef.value,
@@ -153,7 +153,7 @@ const drawLabels = [
   { value: 'Point', label: '点' },
   { value: 'LineString', label: '线' },
   { value: 'Polygon', label: '面' },
-  { value: 'Circle', label: '圆' },
+  { value: 'Circle', label: '圆' }
 ]
 
 let lastDraw
@@ -199,7 +199,6 @@ const handleClear = () => {
   const source = layers['drawLayer'].getSource()
   source.clear()
 }
-
 </script>
 
 <template>
@@ -207,12 +206,20 @@ const handleClear = () => {
     <div ref="mapEleRef" class="map"></div>
     <div ref="toolBarRef" class="tool-bar"></div>
     <div ref="labelToolbarRef" class="label-tool-bar">
-      <button v-for="item in drawLabels" :key="item.value" @click="handleDraw(item)">{{ item.label }}</button>
+      <button v-for="item in drawLabels" :key="item.value" @click="handleDraw(item)">
+        {{ item.label }}
+      </button>
       <button @click="handleClear">清除</button>
     </div>
     <div
-      class="mouse-position" 
-      :style="{ position: 'absolute', left: mousePosition.left, top: mousePosition.top, display: mousePosition.display }">
+      class="mouse-position"
+      :style="{
+        position: 'absolute',
+        left: mousePosition.left,
+        top: mousePosition.top,
+        display: mousePosition.display
+      }"
+    >
       {{ mousePosition.text }}
     </div>
   </div>
