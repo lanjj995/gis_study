@@ -49,6 +49,14 @@ export const routes = [
     meta: {
       title: '余杭'
     }
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('../views/test/index.vue'),
+    meta: {
+      title: 'Test'
+    }
   }
 ]
 
