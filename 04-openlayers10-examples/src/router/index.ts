@@ -43,6 +43,14 @@ export const routes = [
     }
   },
   {
+    path: '/swipe',
+    name: 'swipe',
+    component: () => import('../views/swipe/index.vue'),
+    meta: {
+      title: '卷帘'
+    }
+  },
+  {
     path: '/yuhang',
     name: 'yuhang',
     component: () => import('../views/yuhang/index.vue'),
@@ -56,6 +64,14 @@ export const routes = [
     component: () => import('../views/wmts/index.vue'),
     meta: {
       title: 'wmts'
+    }
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('../views/test/index.vue'),
+    meta: {
+      title: 'Test'
     }
   }
 ]
