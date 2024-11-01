@@ -11,3 +11,7 @@
 .page {
   position: relative;
 }
+
+.ol-mouse-position {
+  color: #fff;
+}

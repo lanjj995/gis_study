@@ -67,13 +67,23 @@ export const routes = [
     }
   },
   {
+    path: '/modify',
+    name: '边线',
+    component: () => import('../views/modify/index.vue'),
+    meta: {
+      title: 'Modify'
+    }
+  },
+  
+  {
     path: '/test',
     name: 'test',
     component: () => import('../views/test/index.vue'),
     meta: {
       title: 'Test'
     }
-  }
+  },
+
 ]
 
 const router = createRouter({
