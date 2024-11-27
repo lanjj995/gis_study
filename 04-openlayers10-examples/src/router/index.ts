@@ -67,13 +67,31 @@ export const routes = [
     }
   },
   {
+    path: '/wmts',
+    name: 'wmts',
+    component: () => import('../views/wmts/index.vue'),
+    meta: {
+      title: 'wmts'
+    }
+  },
+  {
+    path: '/modify',
+    name: '边线',
+    component: () => import('../views/modify/index.vue'),
+    meta: {
+      title: 'Modify'
+    }
+  },
+  
+  {
     path: '/test',
     name: 'test',
     component: () => import('../views/test/index.vue'),
     meta: {
       title: 'Test'
     }
-  }
+  },
+
 ]
 
 const router = createRouter({
