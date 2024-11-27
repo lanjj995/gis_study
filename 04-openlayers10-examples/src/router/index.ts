@@ -51,6 +51,14 @@ export const routes = [
     }
   },
   {
+    path: '/tianditu',
+    name: 'tianditu',
+    component: () => import('../views/tianditu/index.vue'),
+    meta: {
+      title: '天地图'
+    }
+  },
+  {
     path: '/yuhang',
     name: 'yuhang',
     component: () => import('../views/yuhang/index.vue'),

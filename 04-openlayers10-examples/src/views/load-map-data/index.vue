@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, shallowRef, useTemplateRef } from 'vue'
+import { ref, onMounted, useTemplateRef, shallowRef } from 'vue'
 import Map from 'ol/Map'
 import TileLayer from 'ol/layer/Tile'
 import { XYZ } from 'ol/source'
