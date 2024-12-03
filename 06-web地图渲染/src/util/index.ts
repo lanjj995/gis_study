@@ -13,7 +13,17 @@ export function transform4326To3857(coordinates: Array<number>) {
   const x = EARTH_RADIUS * lng
   const y = EARTH_RADIUS * Math.log(Math.tan(Math.PI * 0.25 + 0.5 * lat))
   return [x, y]
+}
 
+
+const radToAngle = (rad: number) => {
+  return rad * (180 / Math.PI)
+}
+export function transform3857To4326(coordinates: Array<number>) {
+  const [x, y] = coordinates;
+  let lng = radToAngle(x) / EARTH_RADIUS
+  let lat = radToAngle((2 * Math.atan(Math.exp(y / EARTH_RADIUS)) - (Math.PI / 2)))
+  return [lng, lat]
 }
 
 /**
