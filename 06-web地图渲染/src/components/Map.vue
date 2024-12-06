@@ -5,6 +5,12 @@ import { GAODE } from '../constant/map-services';
 import { transform3857To4326, transform4326To3857, calcResolution, getTileImageUrl, calcTilePosition, calcPXByCoordinates } from '../util/index'
 import { throttle, debounce } from 'lodash-es'
 
+
+// 分层瓦片逻辑：
+// 1. 每一层对应要铺满整个地球。地球的周长 2 * PI * R = 这一层的瓦片总宽度 = 当前网格集的宽度个数 * 瓦片宽度
+// 2. resolution 分辨率就是 页面上的单位像素对应多少米
+// 3. 
+
 const mapRef = useTemplateRef('mapRef')
 const canvasRef = useTemplateRef('canvasRef')
 
@@ -23,6 +29,8 @@ const initCanvasSize = () => {
     const { width, height } = mapRef.value.getBoundingClientRect()
     canvasRef.value.width = width
     canvasRef.value.height = height
+    const canvasContext = canvasRef.value.getContext('2d')!
+    canvasContext.translate(width / 2, height / 2)
   }
 }
 
@@ -37,18 +45,21 @@ const initCenterCoordinates = () => {
 
 
 const clear = () => {
-  const canvasContext = canvasRef.value!.getContext('2d')!
-  canvasContext.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
+  if (!canvasRef.value) return
+  const canvasContext = canvasRef.value.getContext('2d')!
+  const width = canvasRef.value.width
+  const height = canvasRef.value.height 
+  canvasContext.clearRect(-width, -height, width, height)
 }
 
 const renderTile = () => {
+  if (!canvasRef.value) return
   const [ centerTileX, centerTileY ] = calcTilePosition(center3857.value, zoom.value)
   const [ centerX, centerY ] = initCenterCoordinates()
   const maxX = canvasRef.value!.width / 2
   const maxY = canvasRef.value!.height / 2
   const canvasContext = canvasRef.value!.getContext('2d')!
   const offset = tileSize
-  canvasContext.translate(maxX, maxY)
   const getImageSrc = (x: number, y: number, z: number = zoom.value) => {
     return getTileImageUrl(GAODE, x, y, z)
   }
@@ -88,8 +99,10 @@ const initMouseEvent = () => {
     const resolution = calcResolution(zoom.value)
     let mx = event.movementX * resolution;
     let my = event.movementY * resolution;
-    center3857.value = [center3857.value[0] += mx, center3857.value[1] + my]
+    console.log(`mx`, mx, my, event.movementX, event.movementY)
+    center3857.value = [center3857.value[0] - mx, center3857.value[1] + my]
     center.value = transform3857To4326(center3857.value)
+    console.log(`center.value`, center.value,  center3857.value)
     clear()
     renderTile()
   })
