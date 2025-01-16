@@ -88,10 +88,12 @@ const renderTile = () => {
 
 let isMouseDown = false
 const initMouseEvent = () => {
-  document.addEventListener('mousedown', () => {
+  const canvasEle = canvasRef.value
+  if (!canvasEle) return
+  canvasEle.addEventListener('mousedown', () => {
     isMouseDown = true
   })
-  document.addEventListener('mouseup', () => {
+  canvasEle.addEventListener('mouseup', () => {
     isMouseDown = false
   })
   document.addEventListener('mousemove', (event) => {
@@ -99,7 +101,6 @@ const initMouseEvent = () => {
     const resolution = calcResolution(zoom.value)
     let mx = event.movementX * resolution;
     let my = event.movementY * resolution;
-    console.log(`mx`, mx, my, event.movementX, event.movementY)
     center3857.value = [center3857.value[0] - mx, center3857.value[1] + my]
     center.value = transform3857To4326(center3857.value)
     console.log(`center.value`, center.value,  center3857.value)
@@ -119,11 +120,19 @@ const init = () => {
 onMounted(init)
 
 const onZoomIn = () => {
-
+  if (zoom.value === 18) return
+  zoom.value ++
+  initResolution()
+  clear()
+  renderTile()
 }
 
 const onZoomOut = () => {
-
+  if (zoom.value === 0) return
+  zoom.value --
+  initResolution()
+  clear()
+  renderTile()
 }
 
 </script>
