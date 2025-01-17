@@ -146,7 +146,6 @@ const init = async () => {
   viewer.scene.skyBox.show = false
 
   addBaseLayer(baseLayerValue.value)
-  window.viewer = viewer
 }
 
 onMounted(init)
@@ -158,7 +157,7 @@ onMounted(init)
     <Card class="map-box-operation">
       <Form layout="vertical">
         <FormItem label="底图切换">
-          <Select v-model:value="baseLayerValue" :options="baseLayers" @change="onChangeBaseLayer"></Select>
+          <Select v-model:value="baseLayerValue" :options="baseLayers"></Select>
         </FormItem>
       </Form>
 

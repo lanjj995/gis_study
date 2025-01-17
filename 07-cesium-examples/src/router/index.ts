@@ -20,6 +20,15 @@ export const routes = [
       title: '底图加载',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/cesiumWidget',
+    name: 'cesiumWidget',
+    component: () => import('../views/cesiumWidget/CesiumWidget.vue'),
+    meta: {
+      title: 'cesiumWidget',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 
