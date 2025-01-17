@@ -13,11 +13,11 @@ export const routes = [
     }
   },
   {
-    path: '/base',
-    name: 'base',
-    component: () => import('../views/base/Base.vue'),
+    path: '/baseMap',
+    name: 'baseMap',
+    component: () => import('../views/baseMap/BaseMap.vue'),
     meta: {
-      title: '基础使用',
+      title: '底图加载',
       icon: h(ProfileOutlined)
     }
   }
