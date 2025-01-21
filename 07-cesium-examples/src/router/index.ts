@@ -29,6 +29,15 @@ export const routes = [
       title: 'cesiumWidget',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/imageryProvider',
+    name: 'imageryProvider',
+    component: () => import('../views/imageryProvider/ImageryProvider.vue'),
+    meta: {
+      title: 'imageryProvider',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 

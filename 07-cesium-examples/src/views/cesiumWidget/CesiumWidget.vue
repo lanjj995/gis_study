@@ -17,12 +17,14 @@ const initCesium = async () => {
     orderIndependentTranslucency: true,
     baseLayer: false
   });
-
 }
 
+// baseLayerPicker
 const initBaseLayerPicker = () => {
 
+  // 底图
   const imageryProviderViewModels = [
+    // 天地图
     new Cesium.ProviderViewModel({
       iconUrl: 'http://data.mars3d.cn/img/thumbnail/basemap/tdt_img.png',
       name: '天地图影像',
@@ -43,18 +45,125 @@ const initBaseLayerPicker = () => {
         })
         return TD
       }
+    }),
+    // arcgis地图
+    new Cesium.ProviderViewModel({
+      iconUrl: 'http://data.mars3d.cn/img/thumbnail/basemap/esriWorldImagery.png',
+      name: 'ArcGIS影像',
+      tooltip: 'ArcGIS影像',
+      creationFunction: () => {
+        return Cesium.ArcGisMapServerImageryProvider.fromUrl('https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer')
+      }
+    }),
+    // 高德地图
+    new Cesium.ProviderViewModel({
+      iconUrl: 'http://data.mars3d.cn/img/thumbnail/basemap/gaode_img.png',
+      name: '高德影像',
+      tooltip: '高德影像',
+      creationFunction: () => {
+        return new Cesium.UrlTemplateImageryProvider({
+          url: 'https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
+          subdomains: ['1', '2', '3', '4'],
+          minimumLevel: 1,
+          maximumLevel: 18,
+        })
+      }
+    }),
+    // 谷歌地图
+    new Cesium.ProviderViewModel({
+      iconUrl: 'http://data.mars3d.cn/img/thumbnail/basemap/google_img.png',
+      name: '谷歌影像',
+      tooltip: '谷歌影像',
+      creationFunction: () => {
+        return new Cesium.UrlTemplateImageryProvider({
+          url: 'https://mt{s}.google.cn/vt/lyrs=s&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}',
+          subdomains: ['0', '1', '2', '3'],
+          minimumLevel: 1,
+          maximumLevel: 18,
+        })
+      }
+    }),
+    // OSM地图
+    new Cesium.ProviderViewModel({
+      iconUrl: 'https://data.mars3d.cn/img/thumbnail/basemap/null.png',
+      name: 'OSM地图',
+      tooltip: 'OSM地图',
+      creationFunction: () => {
+        return new Cesium.OpenStreetMapImageryProvider({
+          url: 'https://tile.openstreetmap.org/'
+        })
+      }
+    }),
+    // bing地图
+    new Cesium.ProviderViewModel({
+      iconUrl: 'https://data.mars3d.cn/img/thumbnail/basemap/null.png',
+      name: 'Bing影像',
+      tooltip: 'Bing影像',
+      creationFunction: () => {
+        return Cesium.BingMapsImageryProvider.fromUrl(
+          "https://dev.virtualearth.net", {
+            key: "get-yours-at-https://www.bingmapsportal.com/",
+            mapStyle: Cesium.BingMapsStyle.AERIAL
+        })
+      }
+    }),
+    // Mapbox地图
+    new Cesium.ProviderViewModel({
+      iconUrl: 'https://data.mars3d.cn/img/thumbnail/basemap/null.png',
+      name: 'Mapbox影像',
+      tooltip: 'Mapbox影像',
+      creationFunction: () => {
+        return new Cesium.MapboxImageryProvider({
+          mapId: 'mapbox.satellite',
+          accessToken: 'get-yours-at-https://www.mapbox.com/'
+        })
+      }
+    }),
+  ]
+  // 地形
+  const terrainProviderViewModels = [
+    new Cesium.ProviderViewModel({
+      iconUrl: 'http://data.mars3d.cn/img/thumbnail/basemap/null.png',
+      name: '无地形',
+      tooltip: '无地形',
+      creationFunction: () => {
+        return new Cesium.EllipsoidTerrainProvider()
+      }
+    }),
+    new Cesium.ProviderViewModel({
+      iconUrl: 'http://data.mars3d.cn/img/thumbnail/basemap/null.png',
+      name: '世界地形',
+      tooltip: '世界地形',
+      creationFunction: () => {
+        return Cesium.createWorldTerrainAsync()
+      }
     })
   ]
 
   new Cesium.BaseLayerPicker('base-layer-picker', {
     globe: cesium.scene.globe,
-    imageryProviderViewModels
+    imageryProviderViewModels,
+    terrainProviderViewModels
   })
+  const imageryTitle = document.querySelector('.cesium-baseLayerPicker-sectionTitle[data-bind="visible: imageryProviderViewModels.length > 0"]')
+  if (imageryTitle) {
+    imageryTitle.innerHTML = '影像'
+  }
+  const sectionTitleEle = document.querySelector('.cesium-baseLayerPicker-sectionTitle[data-bind="visible: terrainProviderViewModels.length > 0"]')
+  if (sectionTitleEle) {
+    sectionTitleEle.innerHTML = '地形服务'
+  }
 }
 
-const init = () => {
-  initCesium()
-  // initBaseLayerPicker()
+const initTileCoordinatesImageryProvider = () => {
+  const tileCoordinatesImageryProvider = new Cesium.TileCoordinatesImageryProvider()
+  cesium.imageryLayers.addImageryProvider(tileCoordinatesImageryProvider)
+}
+
+const init = async () => {
+  await initCesium()
+  initBaseLayerPicker()
+  initTileCoordinatesImageryProvider()
 }
 onMounted(init)
 </script>
@@ -81,6 +190,13 @@ onMounted(init)
   left: 10px;
   z-index: 1;
   width: 300px;
+}
+
+#base-layer-picker {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
 }
 
 #credit-container {
