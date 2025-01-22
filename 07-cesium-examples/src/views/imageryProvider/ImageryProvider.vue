@@ -7,6 +7,23 @@ import { findImageryLayer } from '../../utils/cesiumUtil'
 
 const TD_KEY = 'b58e95b35830cd576df218d62abedbdd'
 
+interface ImageryLayerVisible {
+  ArcGisMapServerImageryProvider: boolean,
+  BingMapsImageryProvider: boolean,
+  OpenStreetMapImageryProvider: boolean,
+  TileMapServiceImageryProvider: boolean,
+  TileCoordinatesImageryProvider: boolean,
+  WebMapServiceImageryProvider: boolean,
+  WebMapTileServiceImageryProvider: boolean,
+  UrlTemplateImageryProvider: boolean,
+}
+
+interface ImageryProvider {
+  label: keyof ImageryLayerVisible,
+  value: keyof ImageryLayerVisible,
+  createImageryLayer: () => Cesium.ImageryLayer
+}
+
 const imageryLayerVisible = shallowReactive({
   ArcGisMapServerImageryProvider: false,
   BingMapsImageryProvider: false,
@@ -128,7 +145,7 @@ const imageryProviders = [
       return urlTemplateImageryLayer
     }
   },
-]
+] as Array<ImageryProvider>
 
 let viewer: Cesium.Viewer
 const radioVisibleOptions = [
@@ -167,7 +184,7 @@ const init = async () => {
 }
 onMounted(init)
 
-const onChange = (event: RadioChangeEvent, item: typeof imageryLayers[number]) => {
+const onChange = (event: RadioChangeEvent, item: ImageryProvider) => {
   let imageryLayer = findImageryLayer(viewer.imageryLayers, item.value)
   if (!imageryLayer) {
     imageryLayer = item.createImageryLayer()

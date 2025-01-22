@@ -38,6 +38,15 @@ export const routes = [
       title: 'imageryProvider',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/entity',
+    name: 'entity',
+    component: () => import('../views/entity/Entity.vue'),
+    meta: {
+      title: 'entity',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 
