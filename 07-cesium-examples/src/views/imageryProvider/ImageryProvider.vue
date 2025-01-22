@@ -58,13 +58,15 @@ const imageryProviders = [
     value: 'TileMapServiceImageryProvider',
     createImageryLayer() {
       const tmsImageryProvider = Cesium.TileMapServiceImageryProvider.fromUrl(
-        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'http://localhost:5173/Assets/Textures/NaturalEarthII',
+        // 'http://localhost:8090/geoserver/gwc/service/tms/1.0.0/my_work%3Awuhan2000@EPSG%3A4326@png',
         {
           tileWidth: 256,
           tileHeight: 256,
+          fileExtension: 'jpg',
         }
       )
-      return Cesium.ImageryLayer.fromUrl(tmsImageryProvider, {})
+      return Cesium.ImageryLayer.fromProviderAsync(tmsImageryProvider, {})
     }
   },
   {
