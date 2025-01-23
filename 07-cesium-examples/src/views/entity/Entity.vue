@@ -8,6 +8,14 @@ interface EntityVisible {
   point: boolean,
   polyline: boolean,
   polygon: boolean,
+  polygonheight: boolean,
+  ellipse: boolean,
+  ellipsoid: boolean,
+  box: boolean,
+  rectangle: boolean,
+  corridor: boolean,
+  cylinder: boolean,
+  wall: boolean,
   model: boolean,
 }
 
@@ -15,6 +23,14 @@ const entityVisible = ref<EntityVisible>({
   point: false,
   polyline: false,
   polygon: false,
+  polygonheight: false,
+  ellipse: false,
+  ellipsoid: false,
+  box: false,
+  rectangle: false,
+  corridor: false,
+  cylinder: false,
+  wall: false,
   model: false,
 })
 
@@ -51,10 +67,11 @@ const entities = [
         polyline: new Cesium.PolylineGraphics({
           positions: Cesium.Cartesian3.fromDegreesArray([
             116.357477, 39.708692,
-            116.397477, 39.908692
+            106.397477, 39.708692
           ]),
           width: 2,
-          material: Cesium.Color.RED
+          material: Cesium.Color.RED,
+          // clampToGround: true
         })
       })
     }
@@ -69,10 +86,31 @@ const entities = [
         polygon: new Cesium.PolygonGraphics({
           hierarchy: Cesium.Cartesian3.fromDegreesArray([
             116.357477, 39.708692,
-            116.397477, 39.708692,
-            116.397477, 39.908692,
-            116.357477, 39.908692
-          ])
+            116.397477, 29.708692,
+            106.397477, 29.908692,
+            106.357477, 39.908692
+          ]),
+          material: Cesium.Color.RED
+        })
+      })
+    }
+  },
+  {
+    label: 'polygonheight',
+    value: 'polygonheight',
+    createEntity: () => {
+      return new Cesium.Entity({
+        id: 'polygonheight',
+        name: '面',
+        polygon: new Cesium.PolygonGraphics({
+          hierarchy: Cesium.Cartesian3.fromDegreesArray([
+            116.357477, 39.708692,
+            116.397477, 29.708692,
+            106.397477, 29.908692,
+            106.357477, 39.908692
+          ]),
+          extrudedHeight: 200000.0,
+          material: Cesium.Color.RED
         })
       })
     }
@@ -84,11 +122,159 @@ const entities = [
       return new Cesium.Entity({
         id: 'box',
         name: '面',
+        position: Cesium.Cartesian3.fromDegrees(116.357477, 39.708692, 200),
         box: new Cesium.BoxGraphics({
           dimensions: new Cesium.Cartesian3(400000.0, 300000.0, 500000.0),
           material: Cesium.Color.RED.withAlpha(0.5),
           outline: true,
           outlineColor: Cesium.Color.BLACK
+        })
+      })
+    }
+  },
+  {
+    label: 'rectangle',
+    value: 'rectangle',
+    createEntity: () => {
+      return new Cesium.Entity({
+        id: 'rectangle',
+        name: '矩形',
+        // position: Cesium.Cartesian3.fromDegrees(116.357477, 39.708692, 200),
+        rectangle: new Cesium.RectangleGraphics({
+          coordinates: Cesium.Rectangle.fromDegrees(
+            106.357477, 29.708692,
+            116.357477, 39.708692
+          ),
+          extrudedHeight: 200000.0,
+          material: Cesium.Color.RED.withAlpha(0.5),
+        })
+      })
+    }
+  },
+  {
+    label: 'ellipse',
+    value: 'ellipse',
+    createEntity: () => {
+      return new Cesium.Entity({
+        id: 'ellipse',
+        name: '椭圆柱体',
+        position: Cesium.Cartesian3.fromDegrees(116.357477, 39.708692, 200),
+        ellipse: new Cesium.EllipseGraphics({
+          semiMajorAxis: 300000.0,
+          semiMinorAxis: 100000.0,
+          extrudedHeight: 500000.0,
+          granularity: Cesium.Math.RADIANS_PER_DEGREE,
+          material: Cesium.Color.RED.withAlpha(0.5),
+          outline: true,
+          outlineColor: Cesium.Color.BLACK
+        })
+      })
+    }
+  },
+  {
+    label: 'corridor',
+    value: 'corridor',
+    createEntity: () => {
+      return new Cesium.Entity({
+        id: 'corridor',
+        name: '通道',
+        position: Cesium.Cartesian3.fromDegrees(116.357477, 39.708692, 200),
+        corridor: new Cesium.CorridorGraphics({
+          positions: Cesium.Cartesian3.fromDegreesArray([
+            116.367477, 39.708692, 106.367477, 39.708692, 106.367477, 29.708692,
+          ]),
+          width: 200000.0,
+          material: Cesium.Color.RED.withAlpha(0.5),
+        })
+      })
+    }
+  },
+  {
+    label: 'cylinder',
+    value: 'cylinder',
+    createEntity: () => {
+      return new Cesium.Entity({
+        id: 'cylinder',
+        name: '圆柱体',
+        position: Cesium.Cartesian3.fromDegrees(116.357477, 39.708692, 200),
+        cylinder: new Cesium.CylinderGraphics({
+          length: 100000.0,
+          topRadius: 200000.0,
+          bottomRadius: 200000.0,
+          material: Cesium.Color.RED.withAlpha(0.5),
+          outline: true,
+          outlineColor: Cesium.Color.BLACK
+        })
+      })
+    }
+  },
+  {
+    label: 'cone',
+    value: 'cone',
+    createEntity: () => {
+      return new Cesium.Entity({
+        id: 'cone',
+        name: '圆锥体',
+        position: Cesium.Cartesian3.fromDegrees(116.357477, 39.708692, 200),
+        cylinder: new Cesium.CylinderGraphics({
+          length: 100000.0,
+          topRadius: 0,
+          bottomRadius: 200000.0,
+          material: Cesium.Color.RED.withAlpha(0.5),
+          outline: true,
+          outlineColor: Cesium.Color.BLACK
+        })
+      })
+    }
+  },
+  {
+    label: 'ellipsoid',
+    value: 'ellipsoid',
+    createEntity: () => {
+      return new Cesium.Entity({
+        id: 'ellipsoid',
+        name: '椭圆体',
+        position: Cesium.Cartesian3.fromDegrees(116.357477, 39.708692, 200),
+        ellipsoid: new Cesium.EllipsoidGraphics({
+          radii: new Cesium.Cartesian3(200000.0, 200000.0, 200000.0),
+          material: Cesium.Color.RED.withAlpha(0.5),
+          outline: true,
+          outlineColor: Cesium.Color.BLACK
+        })
+      })
+    }
+  },
+  {
+    label: 'wall',
+    value: 'wall',
+    createEntity: () => {
+      return new Cesium.Entity({
+        id: 'wall',
+        name: '墙',
+        position: Cesium.Cartesian3.fromDegrees(116.357477, 39.708692, 200),
+        wall: new Cesium.WallGraphics({
+          positions: Cesium.Cartesian3.fromDegreesArray([
+            116.357477, 39.708692,
+            115.357477, 38.708692,
+            114.357477, 37.708692,
+            113.357477, 36.708692,
+            112.357477, 35.708692,
+          ]),
+          maximumHeights: [
+            100000,
+            100000,
+            100000,
+            100000,
+            100000,
+          ],
+          minimumHeights: [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          material: Cesium.Color.RED,
         })
       })
     }
