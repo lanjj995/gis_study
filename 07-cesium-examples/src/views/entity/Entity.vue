@@ -15,6 +15,7 @@ interface EntityVisible {
   rectangle: boolean,
   corridor: boolean,
   cylinder: boolean,
+  cone: boolean,
   wall: boolean,
   model: boolean,
 }
@@ -31,6 +32,7 @@ const entityVisible = ref<EntityVisible>({
   corridor: false,
   cylinder: false,
   wall: false,
+  cone: false,
   model: false,
 })
 
@@ -331,6 +333,9 @@ const initCesium = async () => {
   viewer.scene.skyAtmosphere.show = false
   // 隐藏 天空盒
   viewer.scene.skyBox.show = false
+
+  const tileset = await Cesium.createGooglePhotorealistic3DTileset();
+  viewer.scene.primitives.add(tileset);
 }
 
 const coordinate = ref<[number, number]>([0, 0])

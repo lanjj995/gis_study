@@ -47,6 +47,15 @@ export const routes = [
       title: 'entity',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/split',
+    name: 'split',
+    component: () => import('../views/split/Split.vue'),
+    meta: {
+      title: '卷帘',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 
