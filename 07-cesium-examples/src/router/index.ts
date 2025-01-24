@@ -56,6 +56,15 @@ export const routes = [
       title: '卷帘',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/entityOperation',
+    name: 'entityOperation',
+    component: () => import('../views/entityOperation/EntityOperation.vue'),
+    meta: {
+      title: '实体操作',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 
