@@ -18,3 +18,8 @@ Cesium Examples
 
 - 如果你想要快速搭建一个带有完整功能的 3D 地球应用，Cesium.Viewer 是更好的选择。
 - 如果你需要完全控制界面布局和行为，或者希望减少页面加载时间，Cesium.CesiumWidget 更为合适。
+
+
+# 尝试编写通用的 hooks
+
+比如 卷帘 hook

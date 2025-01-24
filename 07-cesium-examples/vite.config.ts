@@ -7,6 +7,11 @@ export default defineConfig((configEnv: ConfigEnv) => {
   const env = loadEnv(configEnv.mode, process.cwd(), '')
   
   return {
+    resolve: {
+      alias: {
+        '@': '/src'
+      }
+    },
     plugins: [
       vue(),
       cesium({
