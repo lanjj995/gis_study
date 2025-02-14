@@ -17,6 +17,6 @@ export default defineConfig((configEnv: ConfigEnv) => {
       cesium({
         cesiumBaseUrl: env.VITE_CESIUM_BASE_URL
       })
-    ]
+    ],
   }
 })

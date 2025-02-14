@@ -137,10 +137,29 @@ const initBaseLayerPicker = () => {
       creationFunction: () => {
         return Cesium.createWorldTerrainAsync()
       }
+    }),
+    new Cesium.ProviderViewModel({
+      iconUrl: 'http://data.mars3d.cn/img/thumbnail/basemap/null.png',
+      name: 'ArcGIS地形',
+      tooltip: 'ArcGIS地形',
+      creationFunction: () => {
+        return Cesium.ArcGISTiledElevationTerrainProvider.fromUrl("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer", {
+          token: "KED1aF_I4UzXOHy3BnhwyBHU4l5oY6rO6walkmHoYqGp4XyIWUd5YZUC1ZrLAzvV40pR6gBXQayh0eFA8m6vPg.."
+        });
+      }
+    }),
+    // Cesium
+    new Cesium.ProviderViewModel({
+      iconUrl: 'http://data.mars3d.cn/img/thumbnail/basemap/null.png',
+      name: 'Cesium地形',
+      tooltip: 'Cesium地形',
+      creationFunction: () => {
+        return Cesium.CesiumTerrainProvider.fromUrl(Cesium.IonResource.fromAssetId(1))
+      }
     })
   ]
 
-  new Cesium.BaseLayerPicker('base-layer-picker', {
+  const baseLayerPicker = new Cesium.BaseLayerPicker('base-layer-picker', {
     globe: cesium.scene.globe,
     imageryProviderViewModels,
     terrainProviderViewModels
@@ -153,6 +172,8 @@ const initBaseLayerPicker = () => {
   if (sectionTitleEle) {
     sectionTitleEle.innerHTML = '地形服务'
   }
+
+  return baseLayerPicker
 }
 
 const initTileCoordinatesImageryProvider = () => {

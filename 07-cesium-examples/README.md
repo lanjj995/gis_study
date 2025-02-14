@@ -28,3 +28,6 @@ Cesium Examples
 # 操作 entity
 
 使用 dataSource 操作 entity
+
+
+1 杯水 了， 09.16 喝完 - 9.28 上一次厕所

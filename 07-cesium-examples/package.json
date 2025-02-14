@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "static": "node ./server/server.cjs"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
@@ -19,6 +20,7 @@
     "@types/geojson": "^7946.0.16",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
+    "http-server": "^14.1.1",
     "typescript": "~5.6.2",
     "vite": "^6.0.5",
     "vite-plugin-cesium": "^1.2.23",

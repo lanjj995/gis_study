@@ -16,6 +16,8 @@ interface ImageryLayerVisible {
   WebMapServiceImageryProvider: boolean,
   WebMapTileServiceImageryProvider: boolean,
   UrlTemplateImageryProvider: boolean,
+  GridImageryProvider: boolean,
+  SingleTileImageryProvider: boolean
 }
 
 interface ImageryProvider {
@@ -33,6 +35,8 @@ const imageryLayerVisible = shallowReactive({
   WebMapServiceImageryProvider: false,
   WebMapTileServiceImageryProvider: false,
   UrlTemplateImageryProvider: false,
+  GridImageryProvider: false,
+  SingleTileImageryProvider: false
 })
 
 // imageryProviders
@@ -51,10 +55,15 @@ const imageryProviders = [
     value: 'BingMapsImageryProvider',
     createImageryLayer() {
       const bingImageryProvider = Cesium.BingMapsImageryProvider.fromUrl(
-        'https://dev.virtualearth.net', {
-          key: 'get-yours-at-https://www.bingmapsportal.com/',
+        "https://dev.virtualearth.net", {
+          key: "AmXdbd8UeUJtaRSn7yVwyXgQlBBUqliLbHpgn2c76DfuHwAXfRrgS5qwfHU6Rhm8",
           mapStyle: Cesium.BingMapsStyle.AERIAL
-      })
+      });
+      // const bingImageryProvider = Cesium.BingMapsImageryProvider.fromUrl(
+      //   'https://dev.virtualearth.net', {
+      //     key: 'get-yours-at-https://www.bingmapsportal.com/',
+      //     mapStyle: Cesium.BingMapsStyle.AERIAL
+      // })
       const bingImageryLayer = Cesium.ImageryLayer.fromProviderAsync(bingImageryProvider, {})
       return bingImageryLayer
     }
@@ -68,6 +77,15 @@ const imageryProviders = [
       })
       const osmImageryLayer = new Cesium.ImageryLayer(osmImageryProvider)
       return osmImageryLayer
+    }
+  },
+  {
+    label: 'GridImageryProvider',
+    value: 'GridImageryProvider',
+    createImageryLayer() {
+      const gridImageryProvider = new Cesium.GridImageryProvider({})
+      const gridImageryLayer = new Cesium.ImageryLayer(gridImageryProvider)
+      return gridImageryLayer;
     }
   },
   {
@@ -92,6 +110,20 @@ const imageryProviders = [
     createImageryLayer() {
       const tileCoordinatesImageryProvider = new Cesium.TileCoordinatesImageryProvider()
       const tileCoordinatesImageryLayer = new Cesium.ImageryLayer(tileCoordinatesImageryProvider)
+      return tileCoordinatesImageryLayer
+    }
+  },
+  {
+    label: 'SingleTileImageryProvider',
+    value: 'SingleTileImageryProvider',
+    createImageryLayer() {
+      const singleTileImageryProvider = new Cesium.SingleTileImageryProvider({
+        url: 'http://localhost:5173/image.png',
+        tileWidth: 256,
+        tileHeight: 256,
+        rectangle: Cesium.Rectangle.fromDegrees(-180.0, -90.0, 180.0, 90.0)
+      })
+      const tileCoordinatesImageryLayer = new Cesium.ImageryLayer(singleTileImageryProvider)
       return tileCoordinatesImageryLayer
     }
   },

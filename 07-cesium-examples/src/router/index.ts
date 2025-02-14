@@ -65,6 +65,24 @@ export const routes = [
       title: '实体操作',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/terrain',
+    name: 'terrain',
+    component: () => import('../views/terrain/Terrain.vue'),
+    meta: {
+      title: 'Terrain',
+      icon: h(ProfileOutlined)
+    }
+  },
+  {
+    path: '/vector',
+    name: 'vector',
+    component: () => import('../views/vector/Vector.vue'),
+    meta: {
+      title: 'Vector',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 

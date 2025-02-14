@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webgl</title>
+  <style>
+    canvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body onload="main()">
+  <canvas width="600" height="400" id="canvas">
+    您的浏览器不支持 canvas
+  </canvas>
+
+  <script>
+    const VSHADER_SOURCE = `var main() {
+     gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+     gl_PointSize = 10.0;
+    }`;
+
+    const FSHADER_SOURCE = `void main() {
+      gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }`;
+
+    function main() {
+      const canvas = document.getElementById('canvas');
+      const gl = canvas.getContext('webgl');
+      gl.clearColor(0.5, 0.5, 0.5, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      gl.drawArrays(gl.POINTS, 0, 1);
+    }
+  </script>
+</body>
+</html>
