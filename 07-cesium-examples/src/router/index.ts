@@ -71,7 +71,7 @@ export const routes = [
     name: 'terrain',
     component: () => import('../views/terrain/Terrain.vue'),
     meta: {
-      title: 'Terrain',
+      title: '地形',
       icon: h(ProfileOutlined)
     }
   },
@@ -80,7 +80,7 @@ export const routes = [
     name: 'vector',
     component: () => import('../views/vector/Vector.vue'),
     meta: {
-      title: 'Vector',
+      title: '矢量',
       icon: h(ProfileOutlined)
     }
   }

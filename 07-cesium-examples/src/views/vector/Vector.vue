@@ -2,7 +2,7 @@
 import * as Cesium from 'cesium'
 import 'cesium/Build/Cesium/Widgets/widgets.css'
 import { onMounted } from 'vue'
-import { Card, Button } from 'ant-design-vue'
+import { Card, Button, Space } from 'ant-design-vue'
 
 let viewer: Cesium.Viewer
 const init = async () => {
@@ -10,29 +10,69 @@ const init = async () => {
   viewer = new Cesium.Viewer('cesiumContainer')
 }
 
-const loadKML = async () => {
-  viewer.camera.flyHome(0)
-  const options = {
-    camera: viewer.scene.camera,
-    canvas: viewer.scene.canvas,
-    screenOverlayContainer: viewer.container,
-  }
-  const kmlDataSource = Cesium.KmlDataSource.load(
+const loadKML = () => {
+  return Cesium.KmlDataSource.load(
     '/static/kml/facilities/facilities.kml',
-    options
+    {
+      camera: viewer.scene.camera,
+      canvas: viewer.scene.canvas,
+      screenOverlayContainer: viewer.container,
+    }
   )
-  viewer.dataSources.add(kmlDataSource)
 }
 
-const loadGeoJSON = async () => {
+const loadKMZ = () => {
+  return Cesium.KmlDataSource.load(
+    '/static/kml/facilities/facilities.kmz',
+    {
+      camera: viewer.scene.camera,
+      canvas: viewer.scene.canvas,
+      screenOverlayContainer: viewer.container,
+    }
+  )
 }
 
-const loadTopoJSON = async () => {
+const loadGeoJSON = () => {
+  return Cesium.GeoJsonDataSource.load('/static/json/simplestyles.geojson')
 }
 
-const loadCZML = async () => {
-  
+const loadTopoJSON = () => {
+  return Cesium.GeoJsonDataSource.load('/static/json/ne_10m_us_states.topojson')
 }
+
+const loadCZML = () => {
+  return Cesium.CzmlDataSource.load('/static/czml/tracking.czml')
+}
+
+const loadGPX = () => {
+  return Cesium.GpxDataSource.load('/static/gpx/lamina.gpx')
+}
+
+
+const vectors = [
+  { name: 'KML', load: loadKML },
+  { name: 'KMZ', load: loadKMZ },
+  { name: 'GeoJSON', load: loadGeoJSON },
+  { name: 'TopoJSON', load: loadTopoJSON },
+  { name: 'GPX', load: loadGPX },
+  { name: 'CZML', load: loadCZML },
+]
+
+const toggle = (item: typeof vectors[0]) => {
+  const dss = viewer.dataSources.getByName(item.name)
+  if (dss.length > 0) {
+    dss[0].show = !dss[0].show
+    viewer.flyTo(dss[0])
+  } else {
+    item.load().then((dataSource) => {
+      Reflect.set(dataSource, 'name', item.name)
+      viewer.flyTo(dataSource)
+      viewer.dataSources.add(dataSource)
+      dataSource.show = true
+    })
+  }
+}
+
 
 onMounted(init)
 </script>
@@ -40,7 +80,9 @@ onMounted(init)
 <template>
   <div class="map-box">
     <Card class="map-box-operation">
-      <Button type="primary" @click="loadKML">load kml</Button>
+      <Space warp>
+        <Button v-for="item in vectors" :key="item.name" type="primary" @click="toggle(item)">{{ item.name }}</Button>
+      </Space>
     </Card>
     <div id="cesiumContainer"></div>
   </div>
@@ -58,7 +100,7 @@ onMounted(init)
   top: 10px;
   left: 10px;
   z-index: 1;
-  width: 300px;
+  min-width: 300px;
 }
 
 #cesiumContainer {
