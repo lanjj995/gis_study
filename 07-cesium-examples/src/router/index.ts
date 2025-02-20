@@ -83,6 +83,15 @@ export const routes = [
       title: '矢量',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/3DTile',
+    name: '3DTile',
+    component: () => import('../views/3DTile/3DTile.vue'),
+    meta: {
+      title: '3DTile',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 

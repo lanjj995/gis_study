@@ -290,7 +290,7 @@ const entities = [
         name: '飞机模型',
         position: Cesium.Cartesian3.fromDegrees(116.397477, 39.908692, 200),
         model: new Cesium.ModelGraphics({
-          uri: await Cesium.IonResource.fromAssetId(2975495),
+          uri: '/static/models/BoxInstanced/BoxInstanced.gltf',
           minimumPixelSize: 64,
           maximumScale: 20000
         })
