@@ -92,6 +92,15 @@ export const routes = [
       title: '3DTile',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/measure',
+    name: 'measure',
+    component: () => import('../views/measure/Measure.vue'),
+    meta: {
+      title: '量测工具',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 

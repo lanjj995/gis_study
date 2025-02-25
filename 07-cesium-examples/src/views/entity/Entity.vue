@@ -5,6 +5,7 @@ import { ref, onMounted } from 'vue'
 import { Form, FormItem, RadioGroup, type RadioChangeEvent } from 'ant-design-vue'
 
 interface EntityVisible {
+  label: boolean,
   point: boolean,
   polyline: boolean,
   polygon: boolean,
@@ -21,6 +22,7 @@ interface EntityVisible {
 }
 
 const entityVisible = ref<EntityVisible>({
+  label: false,
   point: false,
   polyline: false,
   polygon: false,
@@ -43,6 +45,28 @@ interface Entity {
 }
 
 const entities = [
+  {
+    label: 'label',
+    value: 'label',
+    createEntity: () => {
+      return new Cesium.Entity({
+        id: 'label',
+        name: '点',
+        position: Cesium.Cartesian3.fromDegrees(116.367477, 39.808692, 200),
+        label: new Cesium.LabelGraphics({
+          text: 'label',
+          showBackground: true,
+          backgroundColor: Cesium.Color.RED,
+          backgroundPadding: new Cesium.Cartesian2(7, 5),
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 2,
+          horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+          pixelOffset: new Cesium.Cartesian2(0, -20),
+        })
+      })
+    }
+  },
   {
     label: 'point',
     value: 'point',
