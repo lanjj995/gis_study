@@ -40,9 +40,16 @@ const initCesium = async () => {
   measureTool = new MeasureTool(viewer)
 }
 
+// 测距
 const onMeasureLine = () => {
   measureTool.measureLine()
 }
+
+// 测面
+const onMeasureArea = () => {
+  measureTool.measureArea()
+}
+
 const init = () => {
   initCesium()
 }
@@ -55,6 +62,7 @@ onMounted(init)
   <div class="map-box">
     <div class="map-box-operation">
       <Button type="primary" @click="onMeasureLine">测距</Button>
+      <Button type="primary" @click="onMeasureArea">测面</Button>
     </div>
     <div id="cesiumContainer"></div> 
   </div>
