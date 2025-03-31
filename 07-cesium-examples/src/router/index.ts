@@ -101,6 +101,15 @@ export const routes = [
       title: '量测工具',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/cesium-extends',
+    name: 'cesiumExtends',
+    component: () => import('../views/cesiumExtends/CesiumExtends.vue'),
+    meta: {
+      title: 'Cesium Extends',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 

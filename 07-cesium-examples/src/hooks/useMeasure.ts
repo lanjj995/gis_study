@@ -30,7 +30,7 @@ export class MeasureTool {
     for (let index = 0; index < positions.length - 1; index++) {
       const current = Cartographic.fromCartesian(positions[index]) 
       const next = Cartographic.fromCartesian(positions[index + 1])
-      const geodesic = new EllipsoidGeodesic(current, next)
+      const geodesic = new Cesium.EllipsoidGeodesic(current, next)
       const d = Math.sqrt(Math.pow(geodesic.surfaceDistance, 2) + Math.pow(next.height - current.height, 2))
       distance += d
     }
@@ -84,7 +84,6 @@ export class MeasureTool {
     return area
   }
 
-  
   /**
    * 格式化距离
    * @param distance 

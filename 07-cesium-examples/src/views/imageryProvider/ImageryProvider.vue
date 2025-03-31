@@ -119,8 +119,6 @@ const imageryProviders = [
     createImageryLayer() {
       const singleTileImageryProvider = new Cesium.SingleTileImageryProvider({
         url: 'http://localhost:5173/image.png',
-        tileWidth: 256,
-        tileHeight: 256,
         rectangle: Cesium.Rectangle.fromDegrees(-180.0, -90.0, 180.0, 90.0)
       })
       const tileCoordinatesImageryLayer = new Cesium.ImageryLayer(singleTileImageryProvider)
