@@ -31,7 +31,7 @@ const imageryLayerVisible = shallowReactive({
   BingMapsImageryProvider: false,
   OpenStreetMapImageryProvider: false,
   TileMapServiceImageryProvider: false,
-  TileCoordinatesImageryProvider: false,
+  TileCoordinatesImageryProvider: true,
   WebMapServiceImageryProvider: false,
   WebMapTileServiceImageryProvider: false,
   UrlTemplateImageryProvider: false,
@@ -211,10 +211,12 @@ const init = async () => {
   viewer.scene.skyAtmosphere.show = false
   // 隐藏 天空盒
   viewer.scene.skyBox.show = false
+
+  onChange(imageryLayerVisible.TileCoordinatesImageryProvider, imageryProviders.find(e => e.label === 'TileCoordinatesImageryProvider'))
 }
 onMounted(init)
 
-const onChange = (event: RadioChangeEvent, item: ImageryProvider) => {
+const onChange = (event: Boolean, item: ImageryProvider) => {
   let imageryLayer = findImageryLayer(viewer.imageryLayers, item.value)
   if (!imageryLayer) {
     imageryLayer = item.createImageryLayer()
@@ -222,7 +224,7 @@ const onChange = (event: RadioChangeEvent, item: ImageryProvider) => {
     imageryLayer.show = false
     viewer.imageryLayers.add(imageryLayer)
   }
-  if (event.target.value) {
+  if (event) {
     imageryLayer.show = true
     viewer.flyTo(imageryLayer)
   } else {
@@ -237,7 +239,7 @@ const onChange = (event: RadioChangeEvent, item: ImageryProvider) => {
     <div class="map-box-operation">
       <Form>
         <FormItem v-for="item in imageryProviders" :key="item.value" :label="item.label">
-          <RadioGroup v-model:value="imageryLayerVisible[item.value]" :options="radioVisibleOptions" @change="onChange($event, item)"></RadioGroup>
+          <RadioGroup v-model:value="imageryLayerVisible[item.value]" :options="radioVisibleOptions" @change="(event) => onChange(event.target.value, item)"></RadioGroup>
         </FormItem>
       </Form>
     </div>

@@ -110,6 +110,15 @@ export const routes = [
       title: 'Cesium Extends',
       icon: h(ProfileOutlined)
     }
+  },
+  {
+    path: '/edit-vector',
+    name: 'editVector',
+    component: () => import('../views/editVector/EditVector.vue'),
+    meta: {
+      title: '矢量编辑',
+      icon: h(ProfileOutlined)
+    }
   }
 ]
 
